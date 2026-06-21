@@ -1,10 +1,11 @@
-// import User from "../models/UserModel.js";
 const User = require("../models/UserModel.js");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
 module.exports.userVerification = async (req, res) => {
-  const token = req.cookies.token;
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(" ")[1]; // "Bearer <token>"
+
   if (!token) {
     return res.json({ status: false });
   }
