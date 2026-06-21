@@ -29,11 +29,10 @@ const connDB = async () => {
 
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://your-vercel-app.vercel.app"],
     methods: ["GET", "POST", "DELETE"],
     credentials: true,
   })
-  //
 );
 
 app.use(express.json());

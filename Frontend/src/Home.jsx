@@ -25,7 +25,7 @@ function Home() {
 
       try {
         const { data } = await axios.post(
-          "http://localhost:8080",
+          "https://project-2-convo-ai.onrender.com",
           {},
           { withCredentials: true }
         );

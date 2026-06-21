@@ -32,7 +32,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:8080/login",
+        "https://project-2-convo-ai.onrender.com/login",
         {
           ...inputValue,
         },
