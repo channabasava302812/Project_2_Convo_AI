@@ -1,5 +1,4 @@
 import "dotenv/config";
-import { get } from "mongoose";
 
 const getOpenAIAPIResponse = async (message) => {
   const options = {
@@ -19,9 +18,16 @@ const getOpenAIAPIResponse = async (message) => {
       options
     );
     const data = await response.json();
+
+    if (!response.ok) {
+      console.error("OpenAI API error:", data);
+      return "Sorry, I couldn't get a response from the AI right now.";
+    }
+
     return data.choices[0].message.content;
   } catch (err) {
-    console.log(err);
+    console.error("Fetch error:", err);
+    return "Sorry, something went wrong.";
   }
 };
 

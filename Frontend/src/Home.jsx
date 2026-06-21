@@ -1,37 +1,50 @@
-import { Route, Routes } from "react-router-dom";
-import  Login from "./Login";
-import  Signup from "./Signup";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
+import Login from "./Login";
+import Signup from "./Signup";
 import App from "./App";
-import { useNavigate } from "react-router-dom";
-import { useEffect ,useState} from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
-// import { ToastContainer, toast } from "react-toastify";
-
-
 
 function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [cookies, removeCookie] = useCookies([]);
   const [username, setUsername] = useState("");
+
   useEffect(() => {
     const verifyCookie = async () => {
+      if (location.pathname === "/login" || location.pathname === "/signup") {
+        return;
+      }
+
       if (!cookies.token) {
         navigate("/login");
+        return;
       }
-      const { data } = await axios.post(
-        "http://localhost:8080",
-        {},
-        { withCredentials: true }
-      );
-      const { status, user } = data;
-      setUsername(user);
-      return status
-        ? true
-        : (removeCookie("token"), navigate("/login"));
+
+      try {
+        const { data } = await axios.post(
+          "http://localhost:8080",
+          {},
+          { withCredentials: true }
+        );
+        const { status, user } = data;
+        if (status) {
+          setUsername(user);
+        } else {
+          removeCookie("token");
+          navigate("/login");
+        }
+      } catch (err) {
+        console.error(err);
+        removeCookie("token");
+        navigate("/login");
+      }
     };
+
     verifyCookie();
-  }, [cookies, navigate, removeCookie]);
+  }, [cookies, navigate, removeCookie, location.pathname]);
 
   return (
     <div className="App">
@@ -43,7 +56,5 @@ function Home() {
     </div>
   );
 }
-
-
 
 export default Home;
